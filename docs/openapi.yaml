@@ -1,0 +1,77 @@
+openapi: 3.1.0
+info:
+  title: EventScale projection and ingestion API
+  version: 0.1.0-dev
+  description: Local durable intake and asynchronous read models. ACCEPTED does not confirm Kafka publication.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/events:
+    post:
+      summary: Accept an externally identified event (maximum 65536 UTF-8 bytes)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Event'}
+      responses:
+        '202':
+          description: Persisted receipt, status ACCEPTED or PUBLISHED on idempotent retry
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [eventId, status]
+                properties:
+                  eventId: {type: string, format: uuid}
+                  status: {type: string, enum: [ACCEPTED, PUBLISHED]}
+        '400': {description: Invalid contract, money, version or malformed JSON}
+        '409': {description: Same eventId with different canonical content}
+        '413': {description: Request body exceeds 64 KiB}
+        '415': {description: Content-Type must be application/json}
+        '500': {description: Intake storage unavailable; no durable receipt confirmed}
+  /api/v1/events/{id}:
+    get:
+      summary: Inspect durable intake and confirmed Kafka coordinates
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200':
+          description: event_id, ingested_at, nullable published_at/partition_id/kafka_offset
+        '404': {description: No intake receipt}
+  /api/v1/orders/{id}:
+    get:
+      summary: Query active derived order state
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: order_id, status, last_event_id, event_time and channel from active projection}
+        '404': {description: No projected order yet}
+  /api/v1/analytics:
+    get:
+      summary: Query independent cumulative fact analytics
+      responses:
+        '200': {description: Array of event_type, currency, event_count, revenue; currencies remain separate}
+components:
+  schemas:
+    Event:
+      type: object
+      required: [eventId, eventType, eventVersion, aggregateId, occurredAt, producer, correlationId, payload]
+      properties:
+        eventId: {type: string, format: uuid}
+        eventType: {type: string, enum: [order.created, payment.confirmed, order.cancelled, order.shipped, order.delivered]}
+        eventVersion: {type: integer, enum: [1, 2], description: Version 2 is accepted only for order.created}
+        aggregateId: {type: string, minLength: 1, maxLength: 128}
+        occurredAt: {type: string, format: date-time}
+        producer: {type: string, minLength: 1, maxLength: 100}
+        correlationId: {type: string, minLength: 1, maxLength: 128}
+        payload:
+          type: object
+          required: [orderId]
+          description: Created also requires customerId/total/currency; payment requires total/currency. orderId must match aggregateId. Nonblank string checks also apply.
+          properties:
+            orderId: {type: string}
+            customerId: {type: string, minLength: 1, maxLength: 128}
+            total: {type: number, minimum: 0, maximum: 999999999999.99, multipleOf: 0.01}
+            currency: {type: string, pattern: '^[A-Z]{3}$'}
+            channel: {type: string, minLength: 1, maxLength: 64, default: unknown}
