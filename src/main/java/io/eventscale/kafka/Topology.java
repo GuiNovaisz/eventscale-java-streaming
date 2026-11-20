@@ -59,9 +59,8 @@ public class Topology {
         p.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
         return p;
     }
-    @Bean("plainTemplate") KafkaTemplate<String,String> plainTemplate(@Value("${spring.kafka.bootstrap-servers}") String brokers) {
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerProperties(brokers)));
-    }
+    @Bean("plainFactory") DefaultKafkaProducerFactory<String,String> plainFactory(@Value("${spring.kafka.bootstrap-servers}") String brokers) { return new DefaultKafkaProducerFactory<>(producerProperties(brokers)); }
+    @Bean("plainTemplate") KafkaTemplate<String,String> plainTemplate(@Qualifier("plainFactory") ProducerFactory<String,String> factory) { return new KafkaTemplate<>(factory); }
     @Bean("transactionalFactory") DefaultKafkaProducerFactory<String,String> transactionalFactory(@Value("${spring.kafka.bootstrap-servers}") String brokers,
             @Value("${eventscale.instance-id:}") String instance) {
         var factory = new DefaultKafkaProducerFactory<String,String>(producerProperties(brokers));

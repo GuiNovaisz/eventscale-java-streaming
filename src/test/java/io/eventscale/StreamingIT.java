@@ -39,7 +39,8 @@ import static org.awaitility.Awaitility.await;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StreamingIT {
     @Container static KafkaContainer kafka=new KafkaContainer("apache/kafka:4.4.0")
-            .withEnv("KAFKA_MAX_DECOMPRESSED_MESSAGE_BYTES","131072");
+            .withEnv("KAFKA_MAX_DECOMPRESSED_MESSAGE_BYTES","131072")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE","false");
     @Container static PostgreSQLContainer postgres=new PostgreSQLContainer("postgres:18.7-alpine");
     @DynamicPropertySource static void properties(DynamicPropertyRegistry r) {
         r.add("spring.kafka.bootstrap-servers",kafka::getBootstrapServers);
