@@ -6,4 +6,5 @@ public interface FailureProbe {
     default void afterKafkaWrite(java.util.UUID eventId) {}
     default void beforeProjection(String consumer, java.util.UUID eventId) {}
     default void beforeDeadLetter(String key) {}
+    default void afterDeadLetterFailure(String key) {}
 }

@@ -25,7 +25,7 @@ public class Normalizer {
         try {
             var e = contracts.decode(record.value());
             if (!e.aggregateId().equals(record.key())) throw new Contracts.InvalidEvent("KEY_MISMATCH");
-            var output = new ProducerRecord<String,String>(Topology.NORMALIZED, null, e.occurredAt().toEpochMilli(), record.key(), contracts.normalize(e));
+            var output = new ProducerRecord<String,String>(Topology.NORMALIZED, record.key(), contracts.normalize(e));
             output.headers().add("correlationId", e.correlationId().getBytes(java.nio.charset.StandardCharsets.UTF_8));
             kafka.send(output).get(12, TimeUnit.SECONDS);
             probe.afterKafkaWrite(e.eventId());
@@ -37,7 +37,8 @@ public class Normalizer {
             String dlt=json.writeValueAsString(Map.of("originalTopic",record.topic(),"partition",record.partition(),"offset",record.offset(),
                     "eventId",eventId,"failureCategory",invalid.getMessage(),"timestamp",Instant.now().toString()));
             probe.beforeDeadLetter(record.key());
-            kafka.send(Topology.DLT, record.key(), dlt).get(12, TimeUnit.SECONDS);
+            try { kafka.send(Topology.DLT, record.key(), dlt).get(12, TimeUnit.SECONDS); }
+            catch (Exception failure) { probe.afterDeadLetterFailure(record.key()); throw failure; }
             metrics.counter("eventscale.dlt.count", "category", invalid.getMessage()).increment();
         }
     }

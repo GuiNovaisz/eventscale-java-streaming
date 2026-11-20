@@ -13,7 +13,7 @@
 }
 ```
 
-eventId is a global UUID used for dedup/audit/tracing, never a Kafka offset. aggregateId is the Kafka key and must match payload.orderId. occurredAt is immutable event time, intake.ingested_at is admission time, processing logs/durations capture processing time. producer names provenance; correlationId joins a request flow and is propagated as a byte header and in the envelope, never a partition key or metric label.
+eventId is a global UUID used for dedup/audit/tracing, never a Kafka offset. aggregateId is the Kafka key and must match the string payload.orderId. occurredAt is immutable event time within years 0001 through 9999 (representable by the downstream storage contract); intake.ingested_at is admission time, processing logs/durations capture processing time. producer names provenance; correlationId joins a request flow and is propagated as a byte header and in the envelope, never a partition key or metric label. Payload identities and optional channel must be strings, without scalar coercion.
 
 | Type | Versions | Required payload |
 | --- | --- | --- |

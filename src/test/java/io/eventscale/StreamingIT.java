@@ -57,7 +57,9 @@ class StreamingIT {
         final AtomicInteger crashAttempts=new AtomicInteger(); final AtomicInteger abortAttempts=new AtomicInteger();
         volatile CountDownLatch entered=new CountDownLatch(0), release=new CountDownLatch(0);
         volatile CountDownLatch dltAttempt=new CountDownLatch(1);
+        volatile CountDownLatch dltFailure=new CountDownLatch(1);
         public void beforeDeadLetter(String key) { if ("dlt-unavailable".equals(key)) dltAttempt.countDown(); }
+        public void afterDeadLetterFailure(String key) { if ("dlt-unavailable".equals(key)) dltFailure.countDown(); }
         public void afterDatabaseCommit(String consumer,UUID id) {
             if (consumer.equals("analytics") && id.equals(crashId) && crashAttempts.getAndIncrement()==0) throw new IllegalStateException("TEST_CRASH_AFTER_DB_COMMIT");
         }
@@ -267,6 +269,7 @@ class StreamingIT {
             try {
                 var poison=publish(key,"{broken"); publish(key,Samples.event(id,key,"order.created",1));
                 assertThat(probe.dltAttempt.await(15,TimeUnit.SECONDS)).isTrue();
+                assertThat(probe.dltFailure.await(15,TimeUnit.SECONDS)).isTrue();
                 var offsets=admin.listConsumerGroupOffsets("eventscale-normalizer-v1").partitionsToOffsetAndMetadata().get();
                 var offset=offsets.get(new TopicPartition(Topology.ORDERS,poison.partition()));
                 assertThat(offset==null?0:offset.offset()).isLessThanOrEqualTo(poison.offset());

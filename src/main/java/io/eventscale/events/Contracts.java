@@ -28,21 +28,24 @@ public class Contracts {
     public void validate(Event e) {
         if (e == null || e.eventId() == null || e.occurredAt() == null || !text(e.aggregateId(), 128)
                 || !text(e.producer(), 100) || !text(e.correlationId(), 128)) throw new InvalidEvent("INVALID_ENVELOPE");
+        if (e.occurredAt().isBefore(java.time.Instant.parse("0001-01-01T00:00:00Z"))
+                || !e.occurredAt().isBefore(java.time.Instant.parse("+10000-01-01T00:00:00Z")))
+            throw new InvalidEvent("INVALID_EVENT_TIME");
         if (e.eventType() == null || !TYPES.contains(e.eventType())) throw new InvalidEvent("UNKNOWN_TYPE");
         if (e.eventVersion() != 1 && !(e.eventType().equals("order.created") && e.eventVersion() == 2))
             throw new InvalidEvent("UNSUPPORTED_VERSION");
         JsonNode p = e.payload();
         if (p == null || !p.isObject()) throw new InvalidEvent("INVALID_PAYLOAD");
-        if (!e.aggregateId().equals(p.path("orderId").asText())) throw new InvalidEvent("KEY_MISMATCH");
+        if (!p.path("orderId").isTextual() || !e.aggregateId().equals(p.path("orderId").asText())) throw new InvalidEvent("KEY_MISMATCH");
         if (e.eventType().equals("order.created") || e.eventType().equals("payment.confirmed")) {
             if (!p.path("total").isNumber() || p.path("total").decimalValue().signum() < 0
                     || p.path("total").decimalValue().scale() > 2
                     || p.path("total").decimalValue().compareTo(new BigDecimal("999999999999.99")) > 0
                     || !p.path("currency").asText().matches("[A-Z]{3}")) throw new InvalidEvent("INVALID_MONEY");
         }
-        if (e.eventType().equals("order.created") && !text(p.path("customerId").asText(), 128))
+        if (e.eventType().equals("order.created") && (!p.path("customerId").isTextual() || !text(p.path("customerId").asText(), 128)))
             throw new InvalidEvent("INVALID_CUSTOMER");
-        if (p.has("channel") && !text(p.path("channel").asText(), 64)) throw new InvalidEvent("INVALID_CHANNEL");
+        if (p.has("channel") && (!p.path("channel").isTextual() || !text(p.path("channel").asText(), 64))) throw new InvalidEvent("INVALID_CHANNEL");
     }
 
     public String canonical(Event event) { return canonicalNode(mapper.valueToTree(event)).toString(); }

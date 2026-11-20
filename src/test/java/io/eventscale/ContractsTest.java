@@ -35,4 +35,7 @@ class ContractsTest {
     }
     @Test void inconsistentBusinessOrdering() { assertThatThrownBy(()->Transitions.apply("CREATED","order.shipped")).isInstanceOf(Transitions.InconsistentEvent.class); }
     @Test void cancellationTerminal() { assertThat(Transitions.apply("PAID","order.cancelled")).isEqualTo("CANCELLED"); assertThatThrownBy(()->Transitions.apply("CANCELLED","payment.confirmed")).isInstanceOf(Transitions.InconsistentEvent.class); }
+    @Test void rejectsTimestampOutsideStorageRange() { assertThatThrownBy(()->contracts.decode(Samples.created("o1").replace("2026-11-01T12:00:00Z","+10000-01-01T00:00:00Z"))).hasMessage("INVALID_EVENT_TIME"); }
+    @Test void rejectsNumericPayloadIdentity() { assertThatThrownBy(()->contracts.decode(Samples.created("123").replace("\"orderId\":\"123\"","\"orderId\":123"))).hasMessage("KEY_MISMATCH"); }
+    @Test void rejectsNonStringOptionalChannel() { assertThatThrownBy(()->contracts.decode(Samples.event(UUID.randomUUID(),"o1","order.created",2).replace("\"channel\":\"web\"","\"channel\":42"))).hasMessage("INVALID_CHANNEL"); }
 }
