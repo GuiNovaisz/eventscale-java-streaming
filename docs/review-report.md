@@ -1,5 +1,7 @@
 # v0.1.0 — Event Streaming Foundation review report
 
+Historical snapshot: this report records the foundation review at feature SHA `67a886a0e0cae34eccfaef2be1ac211768b4c0a3`, before the subsequently authorized integration into dev. Its branch/review instructions and CI findings describe that review stage. Current integration state is recorded by [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1); release preparation remains pending and the project version stays `0.1.0-dev`.
+
 ## Executive Summary
 
 Implemented EventScale as a retained commerce event log with independent state/analytics consumers, non-destructive replay and precise transaction boundaries. Development version remains 0.1.0-dev. Local Maven and clean-start Compose validations passed. The latest remote checks are linked below and must be green before this mission is marked ready.
