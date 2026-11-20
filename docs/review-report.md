@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Implemented EventScale as a retained commerce event log with independent state/analytics consumers, non-destructive replay and precise transaction boundaries. Development version remains 0.1.0-dev. Local Maven and clean-start Compose validations passed. Remote PR/CI coordinates are recorded below after publication.
+Implemented EventScale as a retained commerce event log with independent state/analytics consumers, non-destructive replay and precise transaction boundaries. Development version remains 0.1.0-dev. Local Maven and clean-start Compose validations passed. The latest remote checks are linked below and must be green before this mission is marked ready.
 
 ## Versions
 
@@ -10,7 +10,7 @@ Java 21 LTS (local Temurin 21.0.13.1+2), Spring Boot 4.2.0, Spring Kafka 4.2.0, 
 
 ## Git
 
-Repository: https://github.com/GuiNovaisz/eventscale-java-streaming. Bootstrap main/dev share abebeb6. Implementation stays on feature/event-streaming-foundation; target dev. No main/dev merge, tag or Release is authorized. Final PR/check coordinates are appended after remote verification.
+Repository: [GuiNovaisz/eventscale-java-streaming](https://github.com/GuiNovaisz/eventscale-java-streaming), public, MIT, default main. Bootstrap main/dev share `abebeb6377acdc975c826946a816c4cd7a264f3a`. Audited implementation commit: `91cceacf1f9a953740a475064348b449d62f6ddb`; subsequent documentation commits remain on the same feature. [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1) targets dev from feature/event-streaming-foundation and is attached to [milestone #1](https://github.com/GuiNovaisz/eventscale-java-streaming/milestone/1). main/dev require PR approval, strict verify/container/review checks, resolved conversations, and reject force-push/deletion (including admins). No merge, tag or Release was performed.
 
 ## Architecture
 
@@ -76,7 +76,7 @@ Actuator dependency readiness/liveness and Prometheus production, failures, cons
 
 ## Tests
 
-17 unit + 16 integration (including failure proofs) = 33 tests; failures=0, errors=0, skips=0. There is no separate additive failure suite. Final local integration duration 38.89 seconds; Maven approximately 75 seconds including shutdown. [Test mapping](testing.md).
+20 unit + 16 integration (including failure proofs) = 36 tests; failures=0, errors=0, skips=0. There is no separate additive failure suite. Final local integration duration 49.31 seconds, including a real DLT publication timeout/recovery; unit duration 0.559 seconds. Maven also includes container lifecycle/shutdown. [Test mapping](testing.md).
 
 ## Docker
 
@@ -84,7 +84,7 @@ Non-root Java image; single Kafka KRaft broker/controller, PostgreSQL and app. C
 
 ## CI
 
-Verify: Java 21, Maven unit + real Kafka/PostgreSQL integration/failure proofs with uploaded reports. Container: Docker build, clean-start, smoke, isolated cleanup. Dependency review and Dependabot proposals; no automatic major merges. Remote run outcomes are appended after publication.
+Verify: Java 21, Maven unit + real Kafka/PostgreSQL integration/failure proofs with uploaded reports. Container: Docker build, clean-start, smoke, isolated cleanup. [Initial PR Verify run](https://github.com/GuiNovaisz/eventscale-java-streaming/actions/runs/44832292988) and [dependency review](https://github.com/GuiNovaisz/eventscale-java-streaming/actions/runs/44832293122) passed. The final revision is gated on the [latest PR checks](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1/checks), including both push and PR builds. Dependabot configuration is delivered on the feature and activates when it reaches the default branch in a later authorized merge; vulnerability alerts are enabled now. No automatic major merges are configured.
 
 ## Security
 
@@ -96,4 +96,4 @@ Complete PT-BR/English README, Mermaid architecture, event/delivery/partition/re
 
 ## Findings
 
-Critical: 0 open after local audit. Important: 0 open after local verification; remote CI must pass before review readiness. Optional: multi-broker HA, archived replay beyond retention, schema registry, intake/dedup lifecycle, stronger public deployment security and targeted larger benchmarks. These are declared scope limits, not implemented claims.
+Critical: 0 open after audit. Important: 0 open after local verification; latest remote CI remains a mandatory completion gate. Optional: multi-broker HA, archived replay beyond retention, schema registry, intake/dedup lifecycle, stronger public deployment security and targeted larger benchmarks. These are declared scope limits, not implemented claims. Task-owned Compose/replay containers and disposable volumes were removed after validation; other running applications were preserved.
