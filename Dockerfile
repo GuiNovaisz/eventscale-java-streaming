@@ -8,7 +8,7 @@ RUN mvn -B -ntp -DskipTests package
 FROM eclipse-temurin:21-jre-alpine
 RUN addgroup -S -g 10001 app && adduser -S -u 10001 -G app app
 WORKDIR /app
-COPY --from=build --chown=app:app /build/target/eventscale-java-streaming-0.1.0-dev.jar app.jar
+COPY --from=build --chown=app:app /build/target/eventscale-java-streaming-0.1.0.jar app.jar
 USER app
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=70 -XX:-UseBASE64Intrinsics"
 EXPOSE 8080
