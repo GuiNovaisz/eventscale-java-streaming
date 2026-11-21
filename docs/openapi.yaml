@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: EventScale projection and ingestion API
-  version: 0.1.0-dev
+  version: 0.1.0
   description: Local durable intake and asynchronous read models. ACCEPTED does not confirm Kafka publication.
 servers:
   - url: http://localhost:8080
