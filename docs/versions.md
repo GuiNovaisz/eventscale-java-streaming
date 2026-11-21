@@ -1,5 +1,7 @@
 # Version decision — 2026-11-20
 
+Application versions below remain unchanged for release 0.1.0; only project version metadata and the explicitly authorized GitHub Actions hygiene were promoted. Historical audit documents retain their original development-version snapshots.
+
 | Component | Selected | Source / compatibility |
 | --- | --- | --- |
 | Java | 21 LTS, local Temurin 21.0.13.1+2 | Java release target 21; matching java/javac, isolated tool directory |
@@ -42,3 +44,7 @@ Java execution includes `-XX:-UseBASE64Intrinsics` as defense in depth while ref
 - [Explicit serialization / header mapping](https://docs.spring.io/spring-kafka/reference/kafka/serdes.html)
 
 Streams was evaluated: this stateless normalization and two JDBC projections gain no state-store/window/join capability from its DSL. A transactional Spring Kafka container makes the offset/output boundary more visible. Therefore no kafka-streams dependency or repository topic is included. JSON v1/v2 contracts demonstrate backward compatibility without a registry; there is no claim of full schema governance.
+
+## Release CI action decision — 2026-11-20
+
+Official current releases/README examples were checked before changing workflows: [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1), [setup-java v6.3.0](https://github.com/actions/setup-java/releases/tag/v6.3.0), and [upload-artifact v7.0.2](https://github.com/actions/upload-artifact/releases/tag/v7.0.2). Workflows select stable majors v7/v6/v7. setup-java's official README marks v1–v4 deprecated. upload-artifact's current examples use v7; its action contract retains ZIP archiving, named artifacts and multiple report paths. Temurin Java 21, Maven cache, if: always(), and test-evidence with Surefire/Failsafe reports are preserved. R1 registers a run-scoped random database password with add-mask before GITHUB_ENV export. No application dependency upgrade accompanies these CI changes.

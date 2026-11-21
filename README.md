@@ -1,6 +1,6 @@
 # EventScale — Event Streaming Foundation
 
-Versão de desenvolvimento: **0.1.0-dev**. Plataforma Java para receber fatos de comércio digital e derivar projeções reproduzíveis de um log Kafka. EventScale não cria pedidos, cobra pagamentos nem substitui o sistema transacional externo.
+Release estável: **v0.1.0 — Event Streaming Foundation**. Plataforma Java para receber fatos de comércio digital e derivar projeções reproduzíveis de um log Kafka. EventScale não cria pedidos, cobra pagamentos nem substitui o sistema transacional externo. [Notas da release](docs/releases/v0.1.0.md).
 
 ## Problema e escolha de Kafka
 
@@ -75,13 +75,13 @@ JUnit/AssertJ/Awaitility e Kafka+PostgreSQL **reais** via Testcontainers provam 
 
 Actuator health/readiness inclui Kafka e PostgreSQL. Prometheus expõe produção/falhas, consumo, duplicatas, falhas de projeção, DLT, quarantine, duração e lag por grupo. IDs ficam em logs estruturados, nunca em metric labels. Lag alto pode ser backlog saudável; erro depende de logs/falhas e tendência de recuperação. Marcadores transacionais são considerados na correção de offsets. [Runbook](docs/operations.md).
 
-Sem frontend, AI, RabbitMQ, Redis, Kubernetes ou cloud. Streams foi avaliado e não adiciona estado/window/join útil a esta normalização; Spring Kafka explicita melhor os limites. Sem HA real, benchmark universal, schema governance completa, retenção ilimitada ou autenticação pública. Intake/dedup crescem sem purge automático. [Arquitetura](docs/architecture.md), [ADRs](docs/adr/), [material de estudo](docs/learning/README.md), [relatório histórico de revisão](docs/review-report.md). Licença MIT. Integração da foundation em `dev`: [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1). Preparação de release pendente; versão `0.1.0-dev`, sem promoção a `main`, tag ou Release nesta integração.
+Sem frontend, AI, RabbitMQ, Redis, Kubernetes ou cloud. Streams foi avaliado e não adiciona estado/window/join útil a esta normalização; Spring Kafka explicita melhor os limites. Sem HA real, benchmark universal, schema governance completa, retenção ilimitada ou autenticação pública. Intake/dedup crescem sem purge automático. [Arquitetura](docs/architecture.md), [ADRs](docs/adr/), [material de estudo](docs/learning/README.md), [relatório histórico de revisão](docs/review-report.md). Licença MIT. A foundation foi integrada em `dev` pelo [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1); a release `v0.1.0` usa tag anotada sobre `main` validada. CI mascara a senha PostgreSQL efêmera antes de exportá-la e usa actions estáveis atuais, preservando Java 21 e os artifacts de testes.
 
 The complete English version follows below.
 
 # EventScale — Event Streaming Foundation (English)
 
-Development version: **0.1.0-dev**. A Java platform that receives externally owned commerce facts and derives reproducible projections from a Kafka log. EventScale does not create orders, charge payments or replace the external transactional system.
+Stable release: **v0.1.0 — Event Streaming Foundation**. A Java platform that receives externally owned commerce facts and derives reproducible projections from a Kafka log. EventScale does not create orders, charge payments or replace the external transactional system. [Release notes](docs/releases/v0.1.0.md).
 
 ## Problem and Kafka choice
 
@@ -129,4 +129,4 @@ JUnit, AssertJ, Awaitility and **real Kafka/PostgreSQL Testcontainers** prove ke
 
 Actuator readiness includes Kafka and PostgreSQL. Prometheus exposes production/failures, consumption, duplicates, projection failures, DLT, quarantine, duration and per-group lag. IDs belong in structured logs, never metric labels. High lag can be healthy backlog; inspect errors and recovery trend. Transaction markers are addressed by offset correction. [Runbook](docs/operations.md).
 
-No frontend, AI, RabbitMQ, Redis, Kubernetes or cloud is included. Streams was evaluated but adds no useful state/window/join to this normalization; Spring Kafka exposes the transaction boundary clearly. No real HA, universal benchmark, full schema governance, unlimited retention or public authentication is claimed. Intake/dedup grow without automatic purge. [Architecture](docs/architecture.md), [ADRs](docs/adr/), [learning materials](docs/learning/README.md), [historical review report](docs/review-report.md). MIT licensed. Foundation integration into `dev`: [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1). Release preparation pending; version `0.1.0-dev`, with no promotion to `main`, tag or Release in this integration.
+No frontend, AI, RabbitMQ, Redis, Kubernetes or cloud is included. Streams was evaluated but adds no useful state/window/join to this normalization; Spring Kafka exposes the transaction boundary clearly. No real HA, universal benchmark, full schema governance, unlimited retention or public authentication is claimed. Intake/dedup grow without automatic purge. [Architecture](docs/architecture.md), [ADRs](docs/adr/), [learning materials](docs/learning/README.md), [historical review report](docs/review-report.md). MIT licensed. The foundation entered `dev` through [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1); release `v0.1.0` uses an annotated tag on validated `main`. CI masks its ephemeral PostgreSQL password before exporting it and uses current stable actions, preserving Java 21 and test artifacts.

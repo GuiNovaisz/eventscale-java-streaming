@@ -1,6 +1,6 @@
 # v0.1.0 — Event Streaming Foundation review report
 
-Historical snapshot: this report records the foundation review at feature SHA `67a886a0e0cae34eccfaef2be1ac211768b4c0a3`, before the subsequently authorized integration into dev. Its branch/review instructions and CI findings describe that review stage. Current integration state is recorded by [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1); release preparation remains pending and the project version stays `0.1.0-dev`.
+Historical snapshot: this report records the foundation review at feature SHA `67a886a0e0cae34eccfaef2be1ac211768b4c0a3`, before integration into dev. All branch/review instructions, development-version references and CI findings below describe that historical stage. [PR #1](https://github.com/GuiNovaisz/eventscale-java-streaming/pull/1) records the completed integration; current release information is in [v0.1.0 release notes](releases/v0.1.0.md).
 
 ## Executive Summary
 
