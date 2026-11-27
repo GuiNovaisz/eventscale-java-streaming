@@ -5,7 +5,7 @@ RUN mvn -B -ntp dependency:go-offline
 COPY src src
 RUN mvn -B -ntp -DskipTests package
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 RUN addgroup -S -g 10001 app && adduser -S -u 10001 -G app app
 WORKDIR /app
 COPY --from=build --chown=app:app /build/target/eventscale-java-streaming-0.1.0.jar app.jar
